@@ -35,7 +35,7 @@ async def normal_message_handler(message: Message):
             	"X-RapidAPI-Host": "instagram-downloader-download-instagram-videos-stories.p.rapidapi.com"
             }
 
-            response = requests.get(url, headers=headers, params=querystring)
+            response = requests.get(link_url, headers=headers, params=querystring)
             await message.answer(response.json().get("media", "Nothing"))
             
         except Exception as e:
