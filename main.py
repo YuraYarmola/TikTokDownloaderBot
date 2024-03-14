@@ -9,6 +9,7 @@ from aiogram.filters import CommandStart
 from functions import download_tiktok, download_instagram_media
 import dotenv
 import logging
+import requests
 import sys
 dotenv.load_dotenv()
 
@@ -25,16 +26,20 @@ async def start_command(message: Message):
 @dp.message()
 async def normal_message_handler(message: Message):
     link_url = message.text
-    # if "instagram" in link_url:
-    #     try:
-    #         video_name = download_instagram_media(link_url)
-    #         with open(video_name, "r") as video_file:
-    #             await message.answer_video(video=FSInputFile(video_file.name))
-    #         await message.answer("Video downloaded and sent!")
-    #         async with download_lock:
-    #             os.remove(video_name)
-    #     except Exception as e:
-    #         await message.answer(str(e))
+    if "instagram" in link_url:
+        try:
+            querystring = {"url":"https://www.instagram.com/reel/CxgAOUUR8R6/"}
+
+            headers = {
+            	"X-RapidAPI-Key": "e9805aa757mshe1542b6585aa5adp165755jsnc846e8890713",
+            	"X-RapidAPI-Host": "instagram-downloader-download-instagram-videos-stories.p.rapidapi.com"
+            }
+
+            response = requests.get(url, headers=headers, params=querystring)
+            await message.answer(response.json().get("media", "Nothing"))
+            
+        except Exception as e:
+            await message.answer(str(e))
 
     if "tiktok.com" in link_url:
         try:
